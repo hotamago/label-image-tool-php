@@ -119,8 +119,9 @@ $listTypeVote = array("Không đạt chất lượng", "Hồ Gươm", "Hồ Tây
                 </div>
             </div>
         </div>
+    </div>
 
-        <?php include "layouts/footer.php"; ?>
+    <?php include "layouts/footer.php"; ?>
 </body>
 
 </html>

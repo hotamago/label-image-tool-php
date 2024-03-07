@@ -40,7 +40,9 @@ if (isset($_POST['submit'])) {
 
         $response = $imgur->uploadImageShorten($image);
         if ($response['success']) {
-            $database->addImage($response['link'], $idUser, json_encode([
+            $pathEx = explode("/", $response['link']);
+            $nameFile = $pathEx[count($pathEx) - 1];
+            $database->addImage($response['link'], $nameFile, $idUser, json_encode([
                 "totalVote" => 0,
                 "numVote" => []
             ]));

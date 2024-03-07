@@ -33,10 +33,11 @@ if (isset($_POST['vote'])) {
     // Update info image
     $infoImage['totalVote']++;
     for ($i = 0; $i < count($listVote); $i++) {
-        if (!isset($infoImage['numVote'][$listVote[$i]])) {
-            $infoImage['numVote'][$listVote[$i]] = 0;
+        $keyLabel = "label-" . $listVote[$i];
+        if (!isset($infoImage['numVote'][$keyLabel])) {
+            $infoImage['numVote'][$keyLabel] = 0;
         }
-        $infoImage['numVote'][$listVote[$i]]++;
+        $infoImage['numVote'][$keyLabel]++;
     }
     $database->updateInfoImageById(json_encode($infoImage), $idImage);
 

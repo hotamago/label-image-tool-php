@@ -5,15 +5,14 @@ include_once __DIR__ . "/../logger.php";
 - ApiHotaStorage class by HotaVN
 - Requied: Logger by HotaVN
 ----------------------------------------
-https://f1.hotavn.com/api.php => bc0c813408c9fd5
-https://f2.hotavn.com/api.php => VAXkjbdFAbP6FUD
 */
 class ApiHotaStorage extends Logger
 {
     private $name = "ApiHotaStorage";
     private $version = "v1.0";
-    private $API_KEY = "bc0c813408c9fd5";
-    private $URL_API = "https://f1.hotavn.com/api.php";
+    private $API_KEY = "label-image-tool-5646430829";
+    private $URL_API = "https://hotavn.com/label-image-tool/storage/api.php";
+    // private $URL_API = "https://localhost/cnnimage/storage/api.php";
 
     public function uploadImage($image_source)
     {
@@ -27,6 +26,11 @@ class ApiHotaStorage extends Logger
 
         $response = curl_exec($ch);
         curl_close($ch);
+
+        // Check code response
+        if ($response === false) {
+            return array("success" => false, "error" => "Curl failed: " . curl_error($ch));
+        }
 
         // $this->log(array("data" => $response));
 

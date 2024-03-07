@@ -11,9 +11,21 @@
         <li class="nav-item">
           <a class="nav-link" href="vote.php">Vote ảnh</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="analytics.php">Thống kê</a>
-        </li>
+        <?php
+        if ($username == "20210751" || $username == "20215402") {
+        ?>
+          <li class="nav-item">
+            <a class="nav-link" href="analytics.php">Thống kê</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="admin.php">Admin</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="adminInfoImage.php">Thông tin ảnh</a>
+          </li>
+        <?php
+        }
+        ?>
       </ul>
     </div>
   </div>

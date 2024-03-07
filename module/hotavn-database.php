@@ -107,8 +107,8 @@ class HotaVNDatabaseImage extends HotaVNDatabaseAccounts
 	private $TYPEQUERY = array(
 		"image" => array(
 			"add" => array(
-				"query" => 'INSERT INTO `image` (`id`, `url`, `idCollector`, `info`) VALUES (null, ?, ?, ?)',
-				"param" => 'sis'
+				"query" => 'INSERT INTO `image` (`id`, `url`, `name`, `idCollector`, `info`) VALUES (null, ?, ?, ?, ?)',
+				"param" => 'ssis'
 			),
 			"get" => array(
 				"id" => array(
@@ -118,6 +118,10 @@ class HotaVNDatabaseImage extends HotaVNDatabaseAccounts
 				"idCollector" => array(
 					"query" => 'SELECT * FROM `image` WHERE `idCollector` = ?',
 					"param" => 'i'
+				),
+				"name" => array(
+					"query" => 'SELECT * FROM `image` WHERE `name` = ?',
+					"param" => 's'
 				),
 				"all" => array(
 					"query" => 'SELECT * FROM `image` WHERE 1',
@@ -164,6 +168,10 @@ class HotaVNDatabaseImage extends HotaVNDatabaseAccounts
 	public function getImageByIdCollector(...$data)
 	{
 		return $this->smart_query_list($this->TYPEQUERY["image"]["get"]["idCollector"], ...$data);
+	}
+	public function getImageByName(...$data)
+	{
+		return $this->smart_query_single($this->TYPEQUERY["image"]["get"]["name"], ...$data);
 	}
 	public function getAllImage()
 	{
