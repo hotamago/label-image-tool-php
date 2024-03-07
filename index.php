@@ -2,57 +2,7 @@
 include_once __DIR__ . "/compoments/auth/checker.php";
 include_once __DIR__ . "/module/hotavn-database.php";
 include_once __DIR__ . "/module/api/api-hota-storage.php";
-include_once __DIR__ . "/module/anti-xss.php";
 $database = new HotaVNDatabase();
-$imgur = new ApiHotaStorage();
-
-$isShowMessage = false;
-$popMessage = "";
-if (isset($_POST['submit'])) {
-    $images = $_FILES['images'];
-    // print_r($images);
-    $count = count($images['name']);
-    for ($i = 0; $i < $count; $i++) {
-        $image = file_get_contents($images['tmp_name'][$i]);
-        $nameImage = $images['name'][$i];
-
-        $popMessage .= "<br/>File thứ " . $i . " (" . HotaAntiXss::htmlentities($nameImage) . "): ";
-
-        // Vaildate image
-        $allowed =  array('jpeg', 'jpg', "png");
-        $ext = strtolower(pathinfo($nameImage, PATHINFO_EXTENSION));
-        if (!in_array($ext, $allowed)) {
-            $popMessage .= "File không hợp lệ, chỉ chấp nhận file ảnh có đuôi jpeg, jpg, png.";
-            continue;
-        }
-
-        // Size not over 5MB
-        if ($images['size'][$i] > 5 * 1024 * 1024) {
-            $popMessage .= "File không hợp lệ, chỉ chấp nhận file ảnh có dung lượng nhỏ hơn 5MB.";
-            continue;
-        }
-
-        // Vaildate with getimagesize
-        if (getimagesize($images['tmp_name'][$i]) == false) {
-            $popMessage .= "File không hợp lệ, chỉ chấp nhận file ảnh.";
-            continue;
-        }
-
-        $response = $imgur->uploadImageShorten($image);
-        if ($response['success']) {
-            $pathEx = explode("/", $response['link']);
-            $nameFile = $pathEx[count($pathEx) - 1];
-            $database->addImage($response['link'], $nameFile, $idUser, json_encode([
-                "totalVote" => 0,
-                "numVote" => []
-            ]));
-            $popMessage .= "Thành công";
-        } else {
-            $popMessage .= $response['message'];
-        }
-    }
-    $isShowMessage = true;
-}
 
 ?>
 <html>
@@ -60,6 +10,54 @@ if (isset($_POST['submit'])) {
 <head>
     <title>HotaVN - CNN IMAGE</title>
     <?php include_once "compoments/common/meta.php"; ?>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        const batchSize = 5;
+        let totalImage = 0;
+        let numImageActivate = 0;
+        let files = [];
+
+        $(document).ready(function() {
+            $("#upload").click(async function() {
+                if (numImageActivate > 0) return;
+                $("#showLoading").show();
+                $("#displayMessageBox").html("");
+                files = $('#images')[0].files;
+
+                numImageActivate = Math.floor(files.length / batchSize) + (files.length % batchSize == 0 ? 0 : 1);
+                totalImage = numImageActivate;
+                $("#numImageTotal").html(totalImage);
+                $("#numImageDone").html(0);
+
+                for (let i = 0; i < files.length; i += batchSize) {
+                    let formData = new FormData();
+
+                    for (let j = i; j < i + batchSize && j < files.length; j++) {
+                        formData.append('images[]', files[i]);
+                        formData.append('submit', true);
+                    }
+
+                    await $.ajax({
+                        url: 'compoments/upfile/api.php',
+                        method: 'post',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            $("#displayMessageBox").html($("#displayMessageBox").html() + response);
+                            numImageActivate--;
+                            $("#numImageDone").html(totalImage - numImageActivate);
+                            if (numImageActivate == 0) {
+                                $("#showLoading").hide();
+                                // Clear input file
+                                $('#images').val("");
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -71,18 +69,12 @@ if (isset($_POST['submit'])) {
         <div class="row">
             <div class="col-md-6 offset-md-3">
                 <h1 class="text-center">Upload ảnh</h1>
-                <form action="index.php" method="post" enctype="multipart/form-data">
-                    <div class="form-group
-                    <?php
-                    if ($isShowMessage) {
-                        echo "has-error";
-                    }
-                    ?>
-                    ">
+                <form onsubmit="return false;">
+                    <div class="form-group">
                         <label for="image">Ảnh</label>
-                        <input type="file" name="images[]" id="images" class="form-control" required multiple>
+                        <input type="file" name="images[]" id="images" class="form-control" required multiple accept=".jpg,.jpeg,.png">
                     </div>
-                    <button type="submit" name="submit" class="btn btn-primary">Upload</button>
+                    <button type=" button" id="upload" class="btn btn-primary">Upload</button>
                     <br />
                 </form>
             </div>
@@ -90,16 +82,18 @@ if (isset($_POST['submit'])) {
     </div>
 
     <!-- Box show message from server -->
-    <div class="container mt-2">
-        <div class="row message-box">
+    <div class="container mt-2 message-box">
+        <div class="row" id="showLoading" style="display:none;">
             <div class="col">
-                <?php
-                if ($isShowMessage) {
-                    echo "<p>" . $popMessage . "</p>";
-                } else {
-                    echo "<span class='help-block'>Chọn nhiều ảnh để upload</span>";
-                }
-                ?>
+                <div class="spinner-border text-primary"></div>
+                <button type="button" class="btn btn-primary">
+                    Uploading <span class="badge bg-secondary" id="numImageDone">0</span> / <span class="badge bg-secondary" id="numImageTotal">0</span>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col" id="displayMessageBox">
+                <span class='help-block'>Chọn nhiều ảnh để upload</span>
             </div>
         </div>
 
