@@ -67,17 +67,20 @@ if (isset($_POST['download_label'])) {
                             <tr>
                                 <th>Id</th>
                                 <th>Username</th>
+                                <th>Số ảnh up</th>
                                 <th>Số ảnh vote</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
                             foreach ($accounts as $account) {
+                                $images_vote = $database->getImageByIdCollector($account['id']);
                                 $images_account = $database->getImageByIdCollector($account['id']);
                                 echo "<tr>";
                                 echo "<td>" . $account['id'] . "</td>";
                                 echo "<td>" . $account['username'] . "</td>";
                                 echo "<td>" . count($images_account) . "</td>";
+                                echo "<td>" . count($images_vote) . "</td>";
                                 echo "</tr>";
                             }
                             ?>
