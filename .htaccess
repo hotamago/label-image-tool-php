@@ -1,0 +1,6 @@
+ErrorDocument 404 /404.html
+DirectoryIndex index.php
+RewriteEngine on
+
+RewriteCond %{HTTPS} !=on
+RewriteRule ^(.*) https://%{SERVER_NAME}/$1 [R,L]
