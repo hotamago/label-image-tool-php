@@ -3,9 +3,9 @@ include_once __DIR__ . "/module/hotavn-database.php";
 $database = new HotaVNDatabase();
 
 session_start();
-if (isset($_COOKIE['token'])) {
-    header("Location: index.php");
-}
+// if (isset($_COOKIE['token'])) {
+//     header("Location: index.php");
+// }
 
 $isLogin = false;
 if (isset($_POST['submit'])) {

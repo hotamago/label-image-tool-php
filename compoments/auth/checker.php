@@ -12,7 +12,8 @@ $token = explode(";", $token);
 $result = $database->getAccountById($token[0]);
 if (!$result || sha1($result['username']) != $token[1]) {
     // Remove cookie
-    setcookie("token", "", time() - 3600);
+    unset($_COOKIE['token']);
+    setcookie('token', '', -1);
     header("Location: login.php");
 }
 
