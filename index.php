@@ -17,12 +17,18 @@ $database = new HotaVNDatabase();
         let numImageActivate = 0;
         let files = [];
 
+        function confirnExitTab() {
+            return 'Are you sure you want to quit? Your images still uploading!';
+        }
+
         $(document).ready(function() {
             $("#upload").click(async function() {
                 if (numImageActivate > 0) return;
                 $("#showLoading").show();
                 $("#displayMessageBox").html("");
                 files = $('#images')[0].files;
+
+                window.onbeforeunload = confirnExitTab;
 
                 numImageActivate = Math.floor(files.length / batchSize) + (files.length % batchSize == 0 ? 0 : 1);
                 totalImage = numImageActivate;
@@ -51,6 +57,7 @@ $database = new HotaVNDatabase();
                                 $("#showLoading").hide();
                                 // Clear input file
                                 $('#images').val("");
+                                window.onbeforeunload = null;
                             }
                         }
                     });
