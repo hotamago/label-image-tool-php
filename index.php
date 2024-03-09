@@ -12,7 +12,7 @@ $database = new HotaVNDatabase();
     <?php include_once "compoments/common/meta.php"; ?>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        const batchSize = 1;
+        const batchSize = 3;
         let totalImage = 0;
         let numImageActivate = 0;
         let files = [];
