@@ -131,6 +131,10 @@ class HotaVNDatabaseImage extends HotaVNDatabaseAccounts
 					"query" => 'SELECT MAX(`id`) as `maxid` FROM `image` WHERE 1',
 					"param" => ""
 				),
+				"id+minId" => array(
+					"query" => 'SELECT * FROM `image` WHERE `id` >= ? ORDER BY `id` ASC LIMIT 1',
+					"param" => "i"
+				),
 			),
 			"update" => array(
 				"url.id" => array(
@@ -180,6 +184,10 @@ class HotaVNDatabaseImage extends HotaVNDatabaseAccounts
 	public function getMaxId()
 	{
 		return $this->smart_query_single($this->TYPEQUERY["image"]["get"]["maxId"]);
+	}
+	public function getImageByIdAndMinId(...$data)
+	{
+		return $this->smart_query_single($this->TYPEQUERY["image"]["get"]["id+minId"], ...$data);
 	}
 	/* Update */
 	public function updateUrlById(...$data)

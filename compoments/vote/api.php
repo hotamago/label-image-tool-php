@@ -50,23 +50,23 @@ if (isset($_POST['vote'])) {
             break;
         }
 
-        $image = $database->getImageById($curIdVote);
+        $image = $database->getImageByIdAndMinId($curIdVote);
         if (!$image) {
             $curIdVote++;
             $database->addCurIdVoteById($idUser);
         } else {
             // Check if image upload by user
             if ($image['idCollector'] == $idUser) {
-                $curIdVote++;
-                $database->addCurIdVoteById($idUser);
+                $curIdVote = $image['id'] + 1;
+                $database->updateCurIdVoteById($curIdVote, $idUser);
                 continue;
             }
 
             // Check if exit vote by idVoter and idImage
             $vote = $database->getVoteByIdVoterAndIdImage($idUser, $image['id']);
             if ($vote) {
-                $curIdVote++;
-                $database->addCurIdVoteById($idUser);
+                $curIdVote = $image['id'] + 1;
+                $database->updateCurIdVoteById($curIdVote, $idUser);
                 continue;
             }
 
