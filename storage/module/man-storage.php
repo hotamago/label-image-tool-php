@@ -58,6 +58,19 @@ class ManStorage extends Logger
         return array("success" => true, "data" => array("link" => $link, "length" => $fileSizeBytes));
     }
 
+    public function deleteFile($name)
+    {
+        $response = array("success" => false);
+        foreach ($this->storages as &$storage) {
+            $query = $storage['query'];
+            $response = $query->deleteFile($name);
+            if ($response['success']) {
+                break;
+            }
+        }
+        return $response;
+    }
+
     //system
     public function filesCount()
     {

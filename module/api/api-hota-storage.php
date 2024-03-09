@@ -38,6 +38,27 @@ class ApiHotaStorage extends Logger
         $responseArr = json_decode($response, true);
         return $responseArr;
     }
+    public function deleteImage($image_name)
+    {
+        // Delete image from Imgur via API 
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->URL_API . "?delete=" . $image_name);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('api-key: ' . $this->API_KEY));
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        // Check code response
+        if ($response === false) {
+            return array("success" => false, "error" => "Curl failed: " . curl_error($ch));
+        }
+
+        // Decode API response to array 
+        $responseArr = json_decode($response, true);
+        return $responseArr;
+    }
+
     public function shortenReponse($response, $defautImage = "")
     {
         $shortResponse = array('success' => $response['success'], 'link' => $defautImage);

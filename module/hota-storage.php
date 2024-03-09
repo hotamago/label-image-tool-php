@@ -1,18 +1,16 @@
 <?php
-include_once __DIR__ . "/logger.php";
 /*
 ----------------------------------------
 - HotaStorage class by HotaVN
-- Requied: Logger by HotaVN
 ----------------------------------------
 */
-class HotaStorage extends Logger
+class HotaStorage
 {
     private $name = "HotaStorage";
     private $version = "v1.0";
     private $domain = "https://hotavn.com/label-image-tool/storage/file/";
     // private $domain = "https://localhost/cnnimage/storage/file/";
-    private $sourceUrl = "file/";
+    private $sourceUrl = __DIR__ . "/../storage/file/";
     public $limitSize = 5; // MB
     public function __construct($limitSize = 5)
     {

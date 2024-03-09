@@ -1,6 +1,7 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// error_reporting(E_ALL);
+// ini_set('display_errors', 1);
+set_time_limit(60);
 
 include_once __DIR__ . '/module/man-storage.php';
 
@@ -27,4 +28,16 @@ if (isset($_REQUEST['data'])) {
         http_response_code(200);
         exit();
     } else http_response_code(403);
-} else http_response_code(400);
+} else if (isset($_REQUEST['delete'])) {
+    $api_key_request = trim($_SERVER['HTTP_API_KEY']);
+    if ($api_key_request == $API_KEY) {
+        $storage = new ManStorage();
+        $response = $storage->deleteFile($_REQUEST['delete']);
+        echo json_encode($response);
+        http_response_code(200);
+        exit();
+    } else http_response_code(403);
+} else {
+    echo json_encode(array("success" => false, "error" => "Bad request"));
+    http_response_code(400);
+}

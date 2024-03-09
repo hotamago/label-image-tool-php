@@ -10,7 +10,7 @@ $database = new HotaVNDatabase();
 <head>
     <title>HotaVN - CNN IMAGE</title>
     <?php include_once "compoments/common/meta.php"; ?>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         const batchSize = 3;
         let totalImage = 0;

@@ -14,6 +14,7 @@ $votes = $database->getVoteByIdVoter($idUser);
 <head>
     <title>Thống kê</title>
     <?php include_once "compoments/common/meta.php"; ?>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         let images = <?php echo json_encode($images); ?>;
 
@@ -21,6 +22,28 @@ $votes = $database->getVoteByIdVoter($idUser);
             let image = document.getElementById("image-" + id);
             let link = images[id - 1]['url'];
             image.innerHTML = "<img width=\"100px\" src=\"" + link + "\" />";
+        }
+
+        async function deleteImage(id) {
+            if (confirm("Bạn có chắc chắn muốn xóa ảnh này?") == false) return;
+            let image = document.getElementById("image-" + id);
+            let res = await $.ajax({
+                url: "compoments/upfile/delete.php",
+                type: "POST",
+                data: {
+                    id: id,
+                    submit: true
+                }
+            });
+            try {
+                image.innerHTML = res;
+            } catch (e) {
+                console.log(e);
+            }
+
+            // Remove row
+            let row = document.getElementById("image-row-" + id);
+            row.remove();
         }
     </script>
 </head>
@@ -48,7 +71,9 @@ $votes = $database->getVoteByIdVoter($idUser);
                             <tr>
                                 <th>STT</th>
                                 <th>Link ảnh</th>
+                                <th>Tên ảnh</th>
                                 <th>Số lượt vote</th>
+                                <th>Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -56,10 +81,17 @@ $votes = $database->getVoteByIdVoter($idUser);
                             $i = 1;
                             foreach ($images as $image) {
                                 $totalVote = json_decode($image['info'], true)['totalVote'];
-                                echo "<tr>";
+                                $idImage = $image['id'];
+                                echo "<tr id=\"image-row-" . $idImage . "\">";
                                 echo "<td>" . $i . "</td>";
+                                echo "<td>" . $image['name'] . "</td>";
                                 echo "<td id=\"image-" . $i . "\"><button class=\"btn btn-primary\" type=\"button\" onclick=\"showImange(" . $i . ")\">show image</button></td>";
                                 echo "<td>" . $totalVote . "</td>";
+                            ?>
+                                <td>
+                                    <button class="btn btn-danger" type="button" onclick="deleteImage(<?php echo $idImage; ?>)">Xóa</button>
+                                </td>
+                            <?php
                                 echo "</tr>";
                                 $i++;
                             }
