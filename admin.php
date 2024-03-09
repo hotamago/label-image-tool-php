@@ -74,7 +74,7 @@ if (isset($_POST['download_label'])) {
                         <tbody>
                             <?php
                             foreach ($accounts as $account) {
-                                $images_vote = $database->getImageByIdCollector($account['id']);
+                                $images_vote = $database->getVoteByIdVoter($account['id']);
                                 $images_account = $database->getImageByIdCollector($account['id']);
                                 echo "<tr>";
                                 echo "<td>" . $account['id'] . "</td>";
