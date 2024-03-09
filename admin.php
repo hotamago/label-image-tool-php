@@ -16,7 +16,7 @@ if (isset($_POST['download_label'])) {
     foreach ($images as $image) {
         $info = json_decode($image['info'], true);
         $label = json_encode($info['numVote']);
-        fwrite($file, $image['name'] . " " . $label . "\n");
+        fwrite($file, $image['name'] . " " . $label . " " . $info['totalVote'] . "\n");
     }
     fclose($file);
     header("Location: label.txt");
