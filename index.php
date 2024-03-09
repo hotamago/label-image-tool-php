@@ -12,7 +12,7 @@ $database = new HotaVNDatabase();
     <?php include_once "compoments/common/meta.php"; ?>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        const batchSize = 5;
+        const batchSize = 1;
         let totalImage = 0;
         let numImageActivate = 0;
         let files = [];
@@ -40,8 +40,8 @@ $database = new HotaVNDatabase();
 
                     for (let j = i; j < i + batchSize && j < files.length; j++) {
                         formData.append('images[]', files[i]);
-                        formData.append('submit', true);
                     }
+                    formData.append('submit', true);
 
                     await $.ajax({
                         url: 'compoments/upfile/api.php',
