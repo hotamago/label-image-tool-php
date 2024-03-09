@@ -39,7 +39,7 @@ $database = new HotaVNDatabase();
                     let formData = new FormData();
 
                     for (let j = i; j < i + batchSize && j < files.length; j++) {
-                        formData.append('images[]', files[i]);
+                        formData.append('images[]', files[j]);
                     }
                     formData.append('submit', true);
 
