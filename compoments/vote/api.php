@@ -70,7 +70,9 @@ if (isset($_POST['vote'])) {
                 continue;
             }
 
-            echo json_encode(array("status" => "success", "message" => "Get image success", "data" => $image));
+            $imageCollector = $database->getAccountById($image['idCollector']);
+
+            echo json_encode(array("status" => "success", "message" => "Get image success", "data" => $image, "username" => $imageCollector['username']));
             break;
         }
     } while (true);

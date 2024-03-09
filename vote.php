@@ -15,7 +15,10 @@ $listTypeVote = array("Không đạt chất lượng", "Hồ Gươm", "Hồ Tây
         const listTypeVote = <?php echo json_encode($listTypeVote); ?>;
         let curIdImage = -1;
 
-        function getImage() {
+        async function getImage() {
+            $("#messageShow").html("Đang tìm ảnh tiếp theo...");
+            $("#messageShow").show();
+
             $.ajax({
                 url: "compoments/vote/api.php",
                 type: "POST",
@@ -28,10 +31,22 @@ $listTypeVote = array("Không đạt chất lượng", "Hồ Gươm", "Hồ Tây
                     if (data.status == "success") {
                         $("#imgShow").attr("src", data.data.url);
                         curIdImage = data.data.id;
+                        $("#idCollector").html(data.username);
+                        $("#messageShow").hide();
+
+                        // Update label
+                        let infoImage = JSON.parse(data.data.info);
+                        for (var i = 0; i < listTypeVote.length; i++) {
+                            $("#label-" + i).html(infoImage.numVote["label-" + i]);
+                        }
                     } else if (data.status == "error") {
-                        alert(data.message);
                         $("#imgShow").hide();
-                        $("#noImageAvailable").show();
+                        $("#messageShow").html(data.message);
+                        $("#messageShow").show();
+                        $("#idCollector").html("No one");
+                        for (var i = 0; i < listTypeVote.length; i++) {
+                            $("#label-" + i).html(0);
+                        }
                         curIdImage = -1;
                     }
                 }
@@ -77,11 +92,11 @@ $listTypeVote = array("Không đạt chất lượng", "Hồ Gươm", "Hồ Tây
                         console.log(response);
                         var data = JSON.parse(response);
                         if (data.status == "success") {
-                            alert(data.message);
                             resetRadio();
                             getImage();
                         } else if (data.status == "error") {
-                            alert(data.message);
+                            $("#messageShow").html(data.message);
+                            $("#messageShow").show();
                         }
                     }
                 });
@@ -94,22 +109,25 @@ $listTypeVote = array("Không đạt chất lượng", "Hồ Gươm", "Hồ Tây
     <?php include "layouts/menu.php"; ?>
 
     <div class="container">
-        <h1 class="text-center">Vote</h1>
+        <h1 class="text-center">Imange by <span id="idCollector"></span>
+        </h1>
         <div class="row mt-1">
             <div class="col-lg-8 col-md-12 text-center">
                 <img id="imgShow" src="" alt="Image" class="img-thumbnail" style="width: 100%; max-width: 500px;">
-                <p id="noImageAvailable" style="display:none;">Hiện tại chưa có ảnh để vote!</p>
+                <p id="messageShow" style="display:none;">Hiện tại chưa có ảnh để vote!</p>
             </div>
             <div class="col-lg-4 col-md-12">
                 <div class="mt-3">
                     <form onsubmit="return false;">
                         <!-- Radio checkbox -->
                         <?php
+                        $i = 0;
                         foreach ($listTypeVote as $key => $value) {
+                            $i++;
                         ?>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="votecheck-<?php echo $key; ?>" value="<?php echo $key; ?>">
-                                <label class="form-check-label"><?php echo $value; ?></label>
+                                <label class="form-check-label"><?php echo $value; ?> (<span id="label-<?php echo $i; ?>">0</span>)</label>
                             </div>
                         <?php
                         }
