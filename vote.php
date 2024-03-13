@@ -36,15 +36,19 @@ $listTypeVote = array("Không đạt chất lượng", "Hồ Gươm", "Hồ Tây
 
                         // Update label
                         let infoImage = JSON.parse(data.data.info);
-                        for (var i = 0; i < listTypeVote.length; i++) {
-                            $("#label-" + i).html(infoImage.numVote["label-" + i]);
+                        for (var i = 1; i <= listTypeVote.length; i++) {
+                            let numVote = infoImage.numVote["label-" + (i - 1)];
+                            if (numVote == undefined) {
+                                numVote = 0;
+                            }
+                            $("#label-" + i).html(numVote);
                         }
                     } else if (data.status == "error") {
                         $("#imgShow").hide();
                         $("#messageShow").html(data.message);
                         $("#messageShow").show();
                         $("#idCollector").html("No one");
-                        for (var i = 0; i < listTypeVote.length; i++) {
+                        for (var i = 1; i <= listTypeVote.length; i++) {
                             $("#label-" + i).html(0);
                         }
                         curIdImage = -1;
