@@ -20,6 +20,7 @@ if (isset($_POST['download_label'])) {
 
 $listTypeVote = array("Không đạt chất lượng", "Hồ Gươm", "Hồ Tây", "Tháp rùa", "Cầu Thê Húc", "Bưu Điện", "Vườn Hoa", "chùa trấn quốc", "Đền Quán Thánh", "Khách Sạn", "Công Viên Nước");
 $numVoteAnalytics = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+$labelWithMaxVote = 0;
 
 for ($i = 0; $i < count($images); $i++) {
     $info = json_decode($images[$i]['info'], true);
@@ -30,6 +31,10 @@ for ($i = 0; $i < count($images); $i++) {
             $numVoteAnalytics[$j] += $info['numVote'][$key];
         }
     }
+}
+
+for ($i = 0; $i < count($numVoteAnalytics); $i++) {
+    $labelWithMaxVote = max($labelWithMaxVote, $numVoteAnalytics[$i]);
 }
 ?>
 <html>
@@ -59,18 +64,6 @@ for ($i = 0; $i < count($images); $i++) {
                     <h4 class="text-center"><?php echo count($accounts); ?></h4>
             </div>
         </div>
-        <!-- Thống kế vote nhãn -->
-        <div class="row">
-            <?php
-            for ($i = 0; $i < count($listTypeVote); $i++) {
-                $type = $listTypeVote[$i];
-                echo "<div class=\"col-md-3\">";
-                echo "<h4 class=\"text-center\">" . $type . "</h4>";
-                echo "<p class=\"text-center\">" . $numVoteAnalytics[$i] . "</p>";
-                echo "</div>";
-            }
-            ?>
-        </div>
         <!-- Nút tải nhãn -->
         <div class="row mt-5">
             <div class="col-md-12">
@@ -78,6 +71,31 @@ for ($i = 0; $i < count($images); $i++) {
                     <button type="submit" name="download_label" class="btn btn-primary">Download label</button>
                 </form>
             </div>
+        </div>
+        <!-- Thống kế vote nhãn -->
+        <div class="row">
+            <?php
+            for ($i = 0; $i < count($listTypeVote); $i++) {
+                $type = $listTypeVote[$i];
+            ?>
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-12">
+                            <h5 class="text-center"><?php echo $type; ?></h5>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="progress">
+                                <div class="progress-bar" style="width:<?php echo $numVoteAnalytics[$i] / $labelWithMaxVote * 100; ?>%"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-12">
+                            <p class="text-center"><?php echo $numVoteAnalytics[$i]; ?></p>
+                        </div>
+                    </div>
+                </div>
+            <?php
+            }
+            ?>
         </div>
         <div class="container mt-5">
             <div class="row">
