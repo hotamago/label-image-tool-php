@@ -3,11 +3,6 @@ include_once __DIR__ . "/compoments/auth/checker.php";
 include_once __DIR__ . "/module/hotavn-database.php";
 $database = new HotaVNDatabase();
 
-if ($username != "20210751" && $username != "20215402") {
-    header("Location: index.php");
-    exit();
-}
-
 $message = "";
 $image = null;
 if (isset($_POST['search'])) {

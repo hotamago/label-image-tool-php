@@ -3,11 +3,6 @@ include_once __DIR__ . "/compoments/auth/checker.php";
 include_once __DIR__ . "/module/hotavn-database.php";
 $database = new HotaVNDatabase();
 
-if ($username != "20210751" && $username != "20215402") {
-    header("Location: index.php");
-    exit();
-}
-
 $images = $database->getAllImage();
 $accounts = $database->getAllAccounts();
 
@@ -21,6 +16,20 @@ if (isset($_POST['download_label'])) {
     fclose($file);
     header("Location: label.txt");
     exit();
+}
+
+$listTypeVote = array("Không đạt chất lượng", "Hồ Gươm", "Hồ Tây", "Tháp rùa", "Cầu Thê Húc", "Bưu Điện", "Vườn Hoa", "chùa trấn quốc", "Đền Quán Thánh", "Khách Sạn", "Công Viên Nước");
+$numVoteAnalytics = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+for ($i = 0; $i < count($images); $i++) {
+    $info = json_decode($images[$i]['info'], true);
+    // $info['numVote'] is an array with key is label-x
+    for ($j = 0; $j < count($listTypeVote); $j++) {
+        $key = "label-" . $j;
+        if (isset($info['numVote'][$key])) {
+            $numVoteAnalytics[$j] += $info['numVote'][$key];
+        }
+    }
 }
 ?>
 <html>
@@ -49,6 +58,18 @@ if (isset($_POST['download_label'])) {
                 <h3 class="text-center">Số tài khoản</h1>
                     <h4 class="text-center"><?php echo count($accounts); ?></h4>
             </div>
+        </div>
+        <!-- Thống kế vote nhãn -->
+        <div class="row">
+            <?php
+            for ($i = 0; $i < count($listTypeVote); $i++) {
+                $type = $listTypeVote[$i];
+                echo "<div class=\"col-md-3\">";
+                echo "<h4 class=\"text-center\">" . $type . "</h4>";
+                echo "<p class=\"text-center\">" . $numVoteAnalytics[$i] . "</p>";
+                echo "</div>";
+            }
+            ?>
         </div>
         <!-- Nút tải nhãn -->
         <div class="row mt-5">
