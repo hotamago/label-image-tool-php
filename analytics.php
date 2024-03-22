@@ -42,8 +42,10 @@ $votes = $database->getVoteByIdVoter($idUser);
             }
 
             // Remove row
-            let row = document.getElementById("image-row-" + id);
-            row.remove();
+            // setTimeout(() => {
+            //     let row = document.getElementById("image-row-" + id);
+            //     row.remove();
+            // }, 3000);
         }
     </script>
 </head>
