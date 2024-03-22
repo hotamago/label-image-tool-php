@@ -17,9 +17,13 @@ if (isset($_POST['submit'])) {
     $idImage = intval($_POST['id']);
     $image = $database->getImageById($idImage);
     if ($image) {
+        // Get votes by image
+        $votes = $database->getVoteByIdImage($idImage);
         // Check image by user
         if ($image['idCollector'] != $idUser) {
             $popMessage .= "<p style=\"color: red;\">Không có quyền xóa file này!</p>";
+        } else if (count($votes) > 0) {
+            $popMessage .= "<p style=\"color: red;\">File này đã được vote, không thể xóa!</p>";
         } else {
             $nameFile = $image['name'];
             $popMessage .= "<br/>File (" . $nameFile . "): ";
