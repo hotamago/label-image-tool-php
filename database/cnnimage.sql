@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th3 07, 2024 lúc 09:57 AM
+-- Thời gian đã tạo: Th4 08, 2024 lúc 12:45 PM
 -- Phiên bản máy phục vụ: 10.4.28-MariaDB
 -- Phiên bản PHP: 8.0.28
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Cơ sở dữ liệu: `cnnimage`
+-- Cơ sở dữ liệu: `test`
 --
 
 -- --------------------------------------------------------
@@ -30,7 +30,8 @@ SET time_zone = "+00:00";
 CREATE TABLE `accounts` (
   `id` int(11) NOT NULL,
   `username` varchar(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `curIdVote` int(11) NOT NULL DEFAULT 0
+  `curIdVote` int(11) NOT NULL DEFAULT 0,
+  `curIdVoteAv` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------

@@ -41,6 +41,10 @@ class HotaVNDatabaseAccounts extends HotaDatabase
 					"query" => 'UPDATE `accounts` SET `curIdVote` = `curIdVote` + 1 WHERE `id` = ?',
 					"param" => "i"
 				),
+				"curIdVoteAv.id" => array(
+					"query" => 'UPDATE `accounts` SET `curIdVoteAv` = ? WHERE `id` = ?',
+					"param" => 'ii'
+				),
 			),
 			"delete" => array(
 				"id" => array(
@@ -85,6 +89,10 @@ class HotaVNDatabaseAccounts extends HotaDatabase
 	public function addCurIdVoteById(...$data)
 	{
 		$this->smart_query_noreturn($this->TYPEQUERY["accounts"]["update"]["addCurIdVote.id"], false, false, ...$data);
+	}
+	public function updateCurIdVoteAvById(...$data)
+	{
+		$this->smart_query_noreturn($this->TYPEQUERY["accounts"]["update"]["curIdVoteAv.id"], false, false, ...$data);
 	}
 	/* Delete */
 	public function deleteAccountById(...$data)
@@ -244,7 +252,12 @@ class HotaVNDatabaseVote extends HotaVNDatabaseImage
 					"param" => ''
 				),
 			),
-			"update" => array(),
+			"update" => array(
+				"listVote.id" => array(
+					"query" => 'UPDATE `vote` SET `listVote` = ? WHERE `id` = ?',
+					"param" => 'si'
+				),
+			),
 			"delete" => array(
 				"id" => array(
 					"query" => 'DELETE FROM `vote` WHERE `id` = ?',
@@ -287,6 +300,11 @@ class HotaVNDatabaseVote extends HotaVNDatabaseImage
 	public function getAllVote()
 	{
 		return $this->smart_query_list($this->TYPEQUERY["vote"]["get"]["all"]);
+	}
+	/* Update */
+	public function updateListVoteById(...$data)
+	{
+		$this->smart_query_noreturn($this->TYPEQUERY["vote"]["update"]["listVote.id"], false, false, ...$data);
 	}
 	/* Delete */
 	public function deleteVoteById(...$data)

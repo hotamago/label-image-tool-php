@@ -12,6 +12,9 @@
           <a class="nav-link" href="vote.php">Vote ảnh</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" href="vote-av.php">Vote ảnh thiếu nhãn</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="analytics.php">Thống kê</a>
         </li>
         <li class="nav-item">

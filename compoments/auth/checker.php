@@ -21,3 +21,29 @@ if (!$result || sha1($result['username']) != $token[1]) {
 $idUser = $result['id'];
 $username = $result['username'];
 $curIdVote = $result['curIdVote'];
+$curIdVoteAv = $result['curIdVoteAv'];
+
+// Helper function
+function checkOrVote($listVote, $ids)
+{
+    for ($i = 0; $i < count($listVote); $i++) {
+        if (in_array($listVote[$i], $ids)) {
+            return true;
+        }
+    }
+    return false;
+}
+function checkOrKey($listVote, $ids)
+{
+    for ($i = 0; $i < count($ids); $i++) {
+        if (array_key_exists($ids[$i], $listVote)) {
+            return true;
+        }
+    }
+    return false;
+}
+function getDiffLabel($listVote1, $listVote2)
+{
+    $diff = array_diff($listVote1, $listVote2);
+    return array_values($diff);
+}

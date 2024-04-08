@@ -20,10 +20,27 @@ if (isset($_POST['download_label'])) {
 
 $listTypeVote = array("Không đạt chất lượng", "Hồ Gươm", "Hồ Tây", "Tháp rùa", "Cầu Thê Húc", "Bưu Điện", "Vườn Hoa", "chùa trấn quốc", "Đền Quán Thánh", "Khách Sạn", "Công Viên Nước");
 $numVoteAnalytics = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+$numVoteAnalyticsFull = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 $labelWithMaxVote = 0;
 
 for ($i = 0; $i < count($images); $i++) {
     $info = json_decode($images[$i]['info'], true);
+
+    for ($j = 0; $j < count($listTypeVote); $j++) {
+        $key = "label-" . $j;
+        if (isset($info['numVote'][$key])) {
+            $numVoteAnalyticsFull[$j] += $info['numVote'][$key];
+        }
+    }
+
+    // Check vaild vote
+    $labelKey = [0, 1, 2, 3, 4, 7, 8];
+    for ($j = 0; $j < count($labelKey); $j++) {
+        $labelKey[$j] = "label-" . $labelKey[$j];
+    }
+    if (!checkOrKey($info['numVote'], $labelKey)) {
+        continue;
+    }
     // $info['numVote'] is an array with key is label-x
     for ($j = 0; $j < count($listTypeVote); $j++) {
         $key = "label-" . $j;
@@ -33,8 +50,8 @@ for ($i = 0; $i < count($images); $i++) {
     }
 }
 
-for ($i = 0; $i < count($numVoteAnalytics); $i++) {
-    $labelWithMaxVote = max($labelWithMaxVote, $numVoteAnalytics[$i]);
+for ($i = 0; $i < count($numVoteAnalyticsFull); $i++) {
+    $labelWithMaxVote = max($labelWithMaxVote, $numVoteAnalyticsFull[$i]);
 }
 ?>
 <html>
@@ -86,10 +103,11 @@ for ($i = 0; $i < count($numVoteAnalytics); $i++) {
                         <div class="col-md-6 col-sm-12">
                             <div class="progress">
                                 <div class="progress-bar" style="width:<?php echo $numVoteAnalytics[$i] / $labelWithMaxVote * 100; ?>%"></div>
+                                <div class="progress-bar bg-danger" style="width:<?php echo ($numVoteAnalyticsFull[$i] - $numVoteAnalytics[$i]) / $labelWithMaxVote * 100; ?>%"></div>
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-12">
-                            <p class="text-center"><?php echo $numVoteAnalytics[$i]; ?></p>
+                            <p class="text-center"><?php echo $numVoteAnalytics[$i] . " / " . $numVoteAnalyticsFull[$i]; ?></p>
                         </div>
                     </div>
                 </div>
